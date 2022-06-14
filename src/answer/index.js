@@ -28,11 +28,21 @@ const ID_ERROR_MSG = {
   required :"필수 정보입니다.",
   invalid : "5-20자의 영문 소문자, 숫자의 특수기호(_),(-)만 사용 가능합니다."
 }
+const PW_ERROR_MSG = {
+  required:"필수 정보입니다.",
+  invalid : "8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요."
+}
+const PW_CHECK_ERROR_MSG = {
+  required:"필수 정보입니다.",
+  invalid : "비밀번호가 일치하지 않습니다."
+}
+
 // ID 유효성 검사
 const checkIdValidation = (value)=>{
   // (공통) 모든 필드의 값이 빠짐 없이 입력해야 한다.
   // 5-20자의 영문 소문자, 숫자의 특수기호(_),(-)만 사용 가능합니다.
   // 3. 커스텀 에러 메시지
+  let isValidId;
   if (value.length===0){
     isValidId = 'required'
     // console.log(isValidId)
@@ -52,15 +62,38 @@ const checkIdValidation = (value)=>{
     $idMsg.innerText = ""
   }
 }
-// pw 유효성검사
+// PW 유효성검사
 const checkPwValidation = (value)=>{
-  const isValidPw = PW_REGX.test(value)
-  console.log(isValidPw)
+  let isValidPw;
+  if (value.length===0){
+    isValidPw = 'required'
+  } else {
+    isValidPw = PW_REGX.test(value)? true : 'invalid'
+  }
+  if (isValidPw !== true){
+    // isValidPw -> invalid 또는 required
+    $pw.classList.add('border-red-600')
+    $pwMsg.innerText = PW_ERROR_MSG[isValidPw] // required 또는 invalid
+  } else {
+    $pw.classList.remove('border-red-600')
+    $pwMsg.innerText = ""
+  }
 }
-// 비밀번호 확인
+// PW 확인 유효성 검사
 const checkPwCheckValidation = (value)=>{
-  const isValidPwCheck = $pw.value === value
-  console.log(isValidPwCheck)
+  let isValidPwCheck;
+  if (value.length === 0 ){
+    isValidPwCheck = 'required'
+  } else {
+    isValidPwCheck = $pw.value === value ? true : 'invalid'
+  }
+  if (isValidPwCheck !== true){
+    $pwCheck.classList.add('border-red-600')
+    $pwCheckMsg.innerText = PW_CHECK_ERROR_MSG[isValidPwCheck]
+  } else{
+    $pwCheck.classList.remove('border-red-600')
+    $pwCheckMsg.innerText = ""
+  }
 }
 $id.addEventListener('focusout',()=>checkIdValidation($id.value))
 $pw.addEventListener('focusout',()=>checkPwValidation($pw.value))
@@ -70,5 +103,5 @@ $submit.addEventListener('click',(e)=>{
   const submitId = checkIdValidation($id.value)
   const submitPw = checkPwValidation($pw.value)
   const submitPwCheck = checkPwCheckValidation($pwCheck.value)
-  submitId && submitPw && submitPwCheck ? console.log('true') : console.log('false')
+  submitId && submitPw === submitPwCheck ? console.log('true') : console.log('false')
 })
