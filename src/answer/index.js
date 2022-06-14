@@ -147,7 +147,6 @@ const $increaseFontBtn = document.getElementById('increase-font-btn')
 const $decreaseFontBtn = document.getElementById('decrease-font-btn')
 
 const $html = document.documentElement
-
 const MAX_FONT_SIZE = 20
 const MIN_FONT_SIZE = 12
 
@@ -157,25 +156,35 @@ const getHtmlFontSize = ()=>{
 }
 
 $increaseFontBtn.addEventListener('click',()=>{
-  const nextFontSize =  getHtmlFontSize() + 1
-  $html.style.fontSize = nextFontSize // 20px
-  // 만약 20px 이상이면 increase 버튼 비활성
-  if (nextFontSize >= MAX_FONT_SIZE){
-    $increaseFontBtn.disabled = true
-  } 
-  if (nextFontSize > MIN_FONT_SIZE){
-    $decreaseFontBtn.disabled = false
-  }
+  onClickFontSizeControl("increase")
+  // const nextFontSize =  getHtmlFontSize() + 1
+  // $html.style.fontSize = nextFontSize // 20px
+  // // 만약 20px 이상이면 increase 버튼 비활성
+  // if (nextFontSize >= MAX_FONT_SIZE){
+  //   $increaseFontBtn.disabled = true
+  // } 
+  // if (nextFontSize > MIN_FONT_SIZE){
+  //   $decreaseFontBtn.disabled = false
+  // }
 })
 
 $decreaseFontBtn.addEventListener('click',()=>{
-  const nextFontSize  =  getHtmlFontSize() -1 
-  $html.style.fontSize = nextFontSize 
-  if (nextFontSize <= MIN_FONT_SIZE){
-    $decreaseFontBtn.disabled = true
-  } 
-  if (nextFontSize < MAX_FONT_SIZE){
-    $increaseFontBtn.disabled = false
-  }
+  onClickFontSizeControl("decrease")
+  // const nextFontSize  =  getHtmlFontSize() -1 
+  // $html.style.fontSize = nextFontSize 
+  // if (nextFontSize <= MIN_FONT_SIZE){
+  //   $decreaseFontBtn.disabled = true
+  // } 
+  // if (nextFontSize < MAX_FONT_SIZE){
+  //   $increaseFontBtn.disabled = false
+  // }
 })
 
+// 리팩토링
+const onClickFontSizeControl = (flag) =>{
+  const fontSize = getHtmlFontSize()
+  let newFontSize = flag === "increase" ? fontSize + 1 : fontSize -1
+  $html.style.fontSize = newFontSize 
+  $decreaseFontBtn.disabled = newFontSize <= MIN_FONT_SIZE // true
+  $increaseFontBtn.disabled = newFontSize >= MAX_FONT_SIZE // true
+}
